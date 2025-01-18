@@ -10,7 +10,11 @@
   "devDependencies": {
     "prettier": "^3.2.5",
     "turbo": "^2.3.3",
-    "typescript": "5.5.4"
+    "typescript": "5.5.4",
+    "snake-game-engine": "github:lucabro81/snake-game-engine#main"
+  },
+  "dependencies": {
+    "@demo/typescript-config": "workspace:*"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
