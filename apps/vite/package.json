@@ -12,6 +12,7 @@
   },
   "devDependencies": {
     "@demo/typescript-config": "workspace:*",
+    "@demo/styles": "workspace:*",
     "typescript": "~5.6.2",
     "vite": "^6.0.5"
   },

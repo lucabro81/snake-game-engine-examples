@@ -1,11 +1,11 @@
 import { createDOMRenderer } from './rendered';
 import { EASY_SCORE_CONFIG, NORMAL_SCORE_CONFIG, HARD_SCORE_CONFIG, COMBO_SCORE_CONFIG } from './score-config';
-import './style.css'
 import { GameConfig, Snake, Vector2D } from 'snake-game-engine';
+import '@demo/styles/css/styles.css';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div id="game-board"></div>
-  <div class="score">Score: <span id="scoreValue">0</span></div>
+  <div id="gameBoard" class="game-board"></div>
+  <div class="score">Score: <span id="scoreValue" class="score-value">0</span></div>
   <div class="controls">
     <button id="startButton">Start Game</button>
     <select id="difficultySelect">
@@ -17,7 +17,9 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `
 
-const gameBoard = document.getElementById('game-board') as HTMLDivElement;
+document.querySelector<HTMLDivElement>('#app')?.classList.add('app');
+
+const gameBoard = document.getElementById('gameBoard') as HTMLDivElement;
 const startButton = document.getElementById('startButton') as HTMLButtonElement;
 const scoreElement = document.getElementById('scoreValue') as HTMLSpanElement;
 const difficultySelect = document.getElementById('difficultySelect') as HTMLSelectElement;
