@@ -1,22 +1,33 @@
 import { createDOMRenderer } from './rendered';
+import { EASY_SCORE_CONFIG, NORMAL_SCORE_CONFIG, HARD_SCORE_CONFIG, COMBO_SCORE_CONFIG } from './score-config';
 import './style.css'
 import { GameConfig, Snake, Vector2D } from 'snake-game-engine';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="game-board"></div>
+  <div class="score">Score: <span id="scoreValue">0</span></div>
   <div class="controls">
     <button id="startButton">Start Game</button>
+    <select id="difficultySelect">
+      <option value="easy">Easy</option>
+      <option value="normal" selected>Normal</option>
+      <option value="hard">Hard</option>
+      <option value="combo">Combo</option>
+    </select>
   </div>
 `
 
 const gameBoard = document.getElementById('game-board') as HTMLDivElement;
 const startButton = document.getElementById('startButton') as HTMLButtonElement;
+const scoreElement = document.getElementById('scoreValue') as HTMLSpanElement;
+const difficultySelect = document.getElementById('difficultySelect') as HTMLSelectElement;
 
 const config: GameConfig = {
   width: 20,
   height: 20,
   tickRate: 8,
-  continuousSpace: true
+  continuousSpace: true,
+  scoreConfig: getScoreConfig(difficultySelect.value)
 };
 
 const CELL_SIZE = 20;
@@ -46,6 +57,45 @@ function handleKeydown(event: KeyboardEvent) {
   const newDirection = directions[event.key];
   if (newDirection) {
     game.setDirection(newDirection);
+  }
+}
+
+function handleScoreUpdate(score: number): void {
+  scoreElement.textContent = score.toString();
+}
+
+function getScoreConfig(difficulty: string) {
+
+  const baseConfig = {
+    onScoreUpdate: handleScoreUpdate
+  };
+
+  switch (difficulty) {
+    case 'easy':
+      return {
+        ...EASY_SCORE_CONFIG,
+        ...baseConfig
+      };
+    case 'normal':
+      return {
+        ...NORMAL_SCORE_CONFIG,
+        ...baseConfig
+      };
+    case 'hard':
+      return {
+        ...HARD_SCORE_CONFIG,
+        ...baseConfig
+      };
+    case 'combo':
+      return {
+        ...COMBO_SCORE_CONFIG,
+        ...baseConfig
+      };
+    default:
+      return {
+        ...NORMAL_SCORE_CONFIG,
+        ...baseConfig
+      };
   }
 }
 

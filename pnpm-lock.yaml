@@ -25,8 +25,8 @@ importers:
   apps/vite:
     dependencies:
       snake-game-engine:
-        specifier: ^1.0.2
-        version: 1.0.2
+        specifier: ^1.1.4
+        version: 1.1.4
     devDependencies:
       '@demo/typescript-config':
         specifier: workspace:*
@@ -1168,8 +1168,8 @@ packages:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
     engines: {node: '>= 0.4'}
 
-  snake-game-engine@1.0.2:
-    resolution: {integrity: sha512-aVYrQVV2i98f9jGUnVAZALHxmSPCF/xuFSyWKwSHyw5iljsdYQBHXT5UWza4GVrTyoF4/OIEp4CPS24mAfCpYw==}
+  snake-game-engine@1.1.4:
+    resolution: {integrity: sha512-iIUKoLPkZUG50uCqjLXGVWz+aPzhW5o4zBJlSpZ39l7+7w0d0HaInRKT4b5WwSNT5By38h2/us4VSI9ml+Bnpw==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -2538,7 +2538,7 @@ snapshots:
       get-intrinsic: 1.2.4
       object-inspect: 1.13.3
 
-  snake-game-engine@1.0.2: {}
+  snake-game-engine@1.1.4: {}
 
   source-map-js@1.2.1: {}
 

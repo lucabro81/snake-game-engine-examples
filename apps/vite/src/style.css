@@ -22,6 +22,18 @@ body {
   background-color: #000;
 }
 
+#scoreValue {
+  color: #ffffff;
+}
+
+.score {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+  text-align: center;
+  color: #4caf50;
+}
+
 .game-cell {
   position: absolute;
   border-radius: 2px;
