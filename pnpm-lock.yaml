@@ -15,9 +15,6 @@ importers:
       prettier:
         specifier: ^3.2.5
         version: 3.3.3
-      snake-game-engine:
-        specifier: github:lucabro81/snake-game-engine#main
-        version: https://codeload.github.com/lucabro81/snake-game-engine/tar.gz/0b18117ad25a0d36f5653da274d517502b6b4003
       turbo:
         specifier: ^2.3.3
         version: 2.3.3
@@ -26,6 +23,10 @@ importers:
         version: 5.5.4
 
   apps/vite:
+    dependencies:
+      snake-game-engine:
+        specifier: ^1.0.2
+        version: 1.0.2
     devDependencies:
       '@demo/typescript-config':
         specifier: workspace:*
@@ -1167,9 +1168,8 @@ packages:
     resolution: {integrity: sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==}
     engines: {node: '>= 0.4'}
 
-  snake-game-engine@https://codeload.github.com/lucabro81/snake-game-engine/tar.gz/0b18117ad25a0d36f5653da274d517502b6b4003:
-    resolution: {tarball: https://codeload.github.com/lucabro81/snake-game-engine/tar.gz/0b18117ad25a0d36f5653da274d517502b6b4003}
-    version: 0.0.0
+  snake-game-engine@1.0.2:
+    resolution: {integrity: sha512-aVYrQVV2i98f9jGUnVAZALHxmSPCF/xuFSyWKwSHyw5iljsdYQBHXT5UWza4GVrTyoF4/OIEp4CPS24mAfCpYw==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -2538,7 +2538,7 @@ snapshots:
       get-intrinsic: 1.2.4
       object-inspect: 1.13.3
 
-  snake-game-engine@https://codeload.github.com/lucabro81/snake-game-engine/tar.gz/0b18117ad25a0d36f5653da274d517502b6b4003: {}
+  snake-game-engine@1.0.2: {}
 
   source-map-js@1.2.1: {}
 
