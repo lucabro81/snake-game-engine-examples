@@ -14,6 +14,8 @@
   },
   "devDependencies": {
     "@demo/typescript-config": "workspace:*",
+    "@demo/styles": "workspace:*",
+    "@demo/game": "workspace:*",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/tsconfig": "^0.7.0",
     "typescript": "~5.6.2",

@@ -34,6 +34,9 @@ importers:
         specifier: ^1.1.5
         version: 1.1.5
     devDependencies:
+      '@demo/game':
+        specifier: workspace:*
+        version: link:../../packages/game
       '@demo/styles':
         specifier: workspace:*
         version: link:../../packages/styles
@@ -102,6 +105,12 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.6.3)
     devDependencies:
+      '@demo/game':
+        specifier: workspace:*
+        version: link:../../packages/game
+      '@demo/styles':
+        specifier: workspace:*
+        version: link:../../packages/styles
       '@demo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -120,6 +129,8 @@ importers:
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.6.3)
+
+  packages/game: {}
 
   packages/styles: {}
 

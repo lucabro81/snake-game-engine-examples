@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GameConfig, Snake, Vector2D } from "snake-game-engine";
-import "./App.css";
-
 import "@demo/styles/css/styles.css";
-import { CELL_SIZE, createRenderer } from "./game/renderer";
-import { getScoreConfig } from "./game/score";
+import { CELL_SIZE, createRenderer, getScoreConfig } from "@demo/game";
 
 function App() {
   const [isGameRunning, setIsGameRunning] = useState(false);
