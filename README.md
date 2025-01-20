@@ -6,8 +6,6 @@ A modern implementation of the classic Snake game built with TypeScript and Vite
 - `vue`: a vue demo app
 - `vite`: a vite (vanilla ts) demo app
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
 ## Game Controls
 
 - Use arrow keys to control the snake's direction
