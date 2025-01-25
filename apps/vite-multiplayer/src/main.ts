@@ -1,6 +1,6 @@
 import { createDOMRenderer } from './rendered';
 import { EASY_SCORE_CONFIG, NORMAL_SCORE_CONFIG, HARD_SCORE_CONFIG, COMBO_SCORE_CONFIG } from './score-config';
-import { GameConfig, Snake, Vector2D } from 'snake-game-engine';
+import { GameConfig, Snake, MultiplayerConfig, Vector2D } from 'snake-game-engine';
 import '@demo/styles/css/styles.css';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
