@@ -82,9 +82,6 @@ importers:
       snake-game-engine:
         specifier: ^1.1.5
         version: 1.1.5
-      ws:
-        specifier: ^8.18.0
-        version: 8.18.0
     devDependencies:
       '@demo/styles':
         specifier: workspace:*
@@ -95,6 +92,28 @@ importers:
       '@types/ws':
         specifier: ^8.5.13
         version: 8.5.13
+      typescript:
+        specifier: ~5.6.2
+        version: 5.6.3
+      vite:
+        specifier: ^6.0.5
+        version: 6.0.7(@types/node@20.17.6)
+
+  apps/vite-multiplayer:
+    dependencies:
+      snake-game-engine:
+        specifier: ^1.1.5
+        version: 1.1.5
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0
+    devDependencies:
+      '@demo/styles':
+        specifier: workspace:*
+        version: link:../../packages/styles
+      '@demo/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       typescript:
         specifier: ~5.6.2
         version: 5.6.3
