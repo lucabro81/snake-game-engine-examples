@@ -70,7 +70,7 @@ function updateGameStateForPlayer(playerId: string, room: GameRoom, snake: Snake
   return room.gameState;
 }
 
-function createRoom(): { room?: GameRoom, roomId: string } {
+function createRoom(playerId: string, ws: WebSocket): { room?: GameRoom, roomId: string } {
   const roomId = randomId();
   const room: GameRoom = {
     id: roomId,
@@ -81,7 +81,49 @@ function createRoom(): { room?: GameRoom, roomId: string } {
     }
   }
   rooms.set(roomId, room);
+
+  addPlayerToRoom(room, playerId, ws);
+  const gameState = initializeGameStateForPlayer(playerId, room);
+
+  ws.send(JSON.stringify({
+    type: 'room_created',
+    roomId: roomId,
+    playerId,
+    gameState
+  }));
   return { room, roomId };
+}
+
+function joinRoom(playerId: string, ws: WebSocket, roomId: string) {
+  const roomToJoin = rooms.get(roomId);
+  if (roomToJoin && roomToJoin.players.size < 2) {
+    roomId;
+    addPlayerToRoom(roomToJoin, playerId, ws);
+    const gameState = initializeGameStateForPlayer(playerId, roomToJoin);
+
+    ws.send(JSON.stringify({
+      type: 'joined_room',
+      roomId: roomId,
+      playerId,
+      gameState
+    }));
+
+    broadcastToRoom(roomId, {
+      type: 'player_joined',
+      playerId
+    }, ws);
+
+    if (roomToJoin.players.size === 2) {
+      broadcastToRoom(roomId, {
+        type: 'game_start'
+      });
+    }
+  } else {
+    ws.send(JSON.stringify({
+      type: 'error',
+      message: 'Room full or not found'
+    }));
+  }
 }
 
 function broadcastToRoom(roomId: string, message: any, exclude?: WebSocket) {
@@ -105,48 +147,11 @@ wss.on('connection', (ws) => {
 
       switch (type) {
         case 'create_room':
-          const { roomId: newRoomId, room } = createRoom();
-          if (room) {
-            addPlayerToRoom(room, playerId, ws);
-            currentRoomId = newRoomId;
-          }
-          ws.send(JSON.stringify({
-            type: 'room_created',
-            roomId: currentRoomId,
-            playerId
-          }));
+          createRoom(playerId, ws);
           break;
 
         case 'join_room':
-          const roomToJoin = rooms.get(roomId);
-          if (roomToJoin && roomToJoin.players.size < 2) {
-            currentRoomId = roomId;
-            addPlayerToRoom(roomToJoin, playerId, ws);
-            const gameState = initializeGameStateForPlayer(playerId, roomToJoin);
-
-            ws.send(JSON.stringify({
-              type: 'joined_room',
-              roomId: currentRoomId,
-              playerId,
-              gameState: gameState
-            }));
-
-            broadcastToRoom(currentRoomId, {
-              type: 'player_joined',
-              playerId
-            }, ws);
-
-            if (roomToJoin.players.size === 2) {
-              broadcastToRoom(currentRoomId, {
-                type: 'game_start'
-              });
-            }
-          } else {
-            ws.send(JSON.stringify({
-              type: 'error',
-              message: 'Room full or not found'
-            }));
-          }
+          joinRoom(playerId, ws, roomId);
           break;
 
         case 'update_snake':

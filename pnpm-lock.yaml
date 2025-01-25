@@ -123,9 +123,6 @@ importers:
 
   apps/vite-multiplayer:
     dependencies:
-      snake-game-engine:
-        specifier: ^1.1.5
-        version: 1.1.5
       ws:
         specifier: ^8.18.0
         version: 8.18.0
@@ -139,6 +136,9 @@ importers:
       '@types/ws':
         specifier: ^8.5.13
         version: 8.5.13
+      snake-game-engine:
+        specifier: link:../../snake-game-engine
+        version: link:../../snake-game-engine
       typescript:
         specifier: ~5.6.2
         version: 5.6.3

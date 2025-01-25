@@ -48,7 +48,7 @@ body {
   background-color: #ff0000;
 }
 
-.controls {
+.controls .multiplayer-controls {
   display: flex;
   gap: 20px;
   align-items: center;

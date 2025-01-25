@@ -13,10 +13,10 @@
     "vite": "^6.0.5",
     "@demo/styles": "workspace:*",
     "@demo/typescript-config": "workspace:*",
-    "@types/ws": "^8.5.13"
+    "@types/ws": "^8.5.13",
+    "snake-game-engine": "link:../../snake-game-engine"
   },
   "dependencies": {
-    "snake-game-engine": "^1.1.5",
     "ws": "^8.18.0"
   }
 }
