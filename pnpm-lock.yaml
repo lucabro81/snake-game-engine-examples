@@ -114,6 +114,9 @@ importers:
       '@demo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/ws':
+        specifier: ^8.5.13
+        version: 8.5.13
       typescript:
         specifier: ~5.6.2
         version: 5.6.3
