@@ -62,7 +62,7 @@ function createRoom(playerId: string, ws: WebSocket): { room?: GameRoom, roomId:
   const gameState = initializeGameStateForPlayer(playerId, room);
 
   ws.send(JSON.stringify({
-    type: 'room_created',
+    type: MessageSentType.ROOM_CREATED,
     roomId: roomId,
     playerId,
     gameState

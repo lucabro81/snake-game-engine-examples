@@ -1,5 +1,6 @@
+import { Snake } from 'snake-game-engine';
 // multiplayer.ts
-export class MultiplayerManager {
+export class MultiplayerManager<T> {
   private ws: WebSocket;
   private roomId: string | null = null;
   private playerId: string | null = null;
@@ -7,10 +8,8 @@ export class MultiplayerManager {
   constructor(
     serverUrl: string,
     private onGameStart: () => void,
-    private onSnakeUpdate: (playerId: string, snake: any) => void,
+    private onSnakeUpdate: (playerId: string, snake: Snake<T>) => void,
     private onFoodUpdate: (food: { x: number, y: number }) => void,
-    private onPlayerJoined: (playerId: string) => void,
-    private onPlayerLeft: (playerId: string) => void
   ) {
     this.ws = new WebSocket(serverUrl);
     this.setupWebSocket();
@@ -50,7 +49,7 @@ export class MultiplayerManager {
     this.ws.send(JSON.stringify({ type: 'join_room', roomId }));
   }
 
-  updateSnake(snake: any) {
+  updateSnake(snake: Snake<T>) {
     if (this.roomId) {
       this.ws.send(JSON.stringify({
         type: 'update_snake',

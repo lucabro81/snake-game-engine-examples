@@ -2,19 +2,12 @@ import '@demo/styles/css/styles.css';
 import { MultiplayerSnake, Snake, Vector2D } from 'snake-game-engine';
 import { useGameConfig } from './game/game-config';
 import { createDOMRenderer } from './game/rendered';
+import { MultiplayerManager } from './game/multiplayer-manager';
 
+// TODO: create room needs also a level selection
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="gameBoard" class="game-board"></div>
   <div class="score">Score: <span id="scoreValue" class="score-value">0</span></div>
-  <div class="controls">
-    <button id="startButton">Start Game</button>
-    <select id="difficultySelect">
-      <option value="easy">Easy</option>
-      <option value="normal" selected>Normal</option>
-      <option value="hard">Hard</option>
-      <option value="combo">Combo</option>
-    </select>
-  </div>
   <div class="multiplayer-controls">
     <button id="createRoomBtn">Create Room</button>
     <div class="join-room">
@@ -24,6 +17,35 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
   <div id="roomInfo"></div>
 `;
+
+function handleGameStart() {
+  console.log('game start');
+  if (game) {
+    game.stop();
+  }
+  // Clear previous game elements
+  gameBoard.innerHTML = '';
+
+  const renderer = createDOMRenderer(gameBoard, CELL_SIZE);
+  game = new MultiplayerSnake<HTMLElement>(config, renderer, handleGameOver);
+  game.start();
+  startButton.textContent = 'Restart Game';
+}
+
+function handleSnakeUpdate(playerId: string, snake: any) {
+  console.log('snake updated', playerId, snake);
+}
+
+function handleFoodUpdate(food: { x: number, y: number }) {
+  console.log('food updated', food);
+}
+
+const multiplayerManager = new MultiplayerManager<HTMLElement>(
+  'ws://localhost:8080',
+  handleGameStart,
+  handleSnakeUpdate,
+  handleFoodUpdate
+);
 
 // let ws: WebSocket;
 
@@ -83,21 +105,21 @@ function handleKeydown(event: KeyboardEvent) {
 
 document.addEventListener('keydown', handleKeydown);
 
-startButton.addEventListener('click', () => {
-  if (game) {
-    game.stop();
-  }
-  // Clear previous game elements
-  gameBoard.innerHTML = '';
+// startButton.addEventListener('click', () => {
+//   if (game) {
+//     game.stop();
+//   }
+//   // Clear previous game elements
+//   gameBoard.innerHTML = '';
 
-  const renderer = createDOMRenderer(gameBoard, CELL_SIZE);
-  game = new MultiplayerSnake(config, renderer, handleGameOver);
-  game.start();
-  startButton.textContent = 'Restart Game';
-});
+//   const renderer = createDOMRenderer(gameBoard, CELL_SIZE);
+//   game = new MultiplayerSnake(config, renderer, handleGameOver);
+//   game.start();
+//   startButton.textContent = 'Restart Game';
+// });
 
 createRoomBtn.addEventListener('click', () => {
-  console.log('create room');
+  multiplayerManager.createRoom();
 });
 
 joinRoomBtn.addEventListener('click', () => {
