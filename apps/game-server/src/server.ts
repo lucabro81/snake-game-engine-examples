@@ -16,31 +16,7 @@
 // });
 
 import { WebSocket, WebSocketServer } from 'ws';
-
-interface GameRoom {
-  id: string;
-  players: Map<string, WebSocket>;
-  gameState: {
-    snakes: Map<string, {
-      positions: Array<{ x: number, y: number }>;
-      direction: { x: number, y: number };
-    }>;
-    food: { x: number, y: number } | null;
-  };
-}
-
-type MessageType = 'create_room' | 'join_room' | 'update_snake' | 'update_food';
-interface Message {
-  type: MessageType;
-  roomId: string;
-  snake?: any;
-  food?: any;
-}
-
-interface Snake {
-  positions: Array<{ x: number, y: number }>;
-  direction: { x: number, y: number };
-}
+import { GameRoom, Snake, MessageSent, MessageSentType, MessageReceived, MessageReceivedType } from './types';
 
 const rooms: Map<string, GameRoom> = new Map();
 
@@ -101,26 +77,29 @@ function joinRoom(playerId: string, ws: WebSocket, roomId: string) {
     addPlayerToRoom(roomToJoin, playerId, ws);
     const gameState = initializeGameStateForPlayer(playerId, roomToJoin);
 
-    ws.send(JSON.stringify({
-      type: 'joined_room',
+    const joinedRoomMessage: MessageSent = {
+      type: MessageSentType.JOINED_ROOM,
       roomId: roomId,
       playerId,
       gameState
-    }));
+    }
 
-    broadcastToRoom(roomId, {
-      type: 'player_joined',
+    const playerJoinedMessage: MessageSent = {
+      type: MessageSentType.PLAYER_JOINED,
       playerId
-    }, ws);
+    }
+
+    ws.send(JSON.stringify(joinedRoomMessage));
+    broadcastToRoom(roomId, playerJoinedMessage, ws);
 
     if (roomToJoin.players.size === 2) {
       broadcastToRoom(roomId, {
-        type: 'game_start'
+        type: MessageSentType.GAME_START
       });
     }
   } else {
     ws.send(JSON.stringify({
-      type: 'error',
+      type: MessageSentType.ERROR,
       message: 'Room full or not found'
     }));
   }
@@ -143,24 +122,24 @@ wss.on('connection', (ws) => {
 
   ws.on('message', (data) => {
     try {
-      const { type, roomId, snake, food }: Message = JSON.parse(data.toString());
+      const { type, roomId, snake, food }: MessageReceived = JSON.parse(data.toString());
 
       switch (type) {
-        case 'create_room':
+        case MessageReceivedType.CREATE_ROOM:
           createRoom(playerId, ws);
           break;
 
-        case 'join_room':
+        case MessageReceivedType.JOIN_ROOM:
           joinRoom(playerId, ws, roomId);
           break;
 
-        case 'update_snake':
+        case MessageReceivedType.UPDATE_SNAKE:
           if (currentRoomId) {
             const room = rooms.get(currentRoomId);
             if (room) {
               updateGameStateForPlayer(playerId, room, snake);
               broadcastToRoom(currentRoomId, {
-                type: 'snake_updated',
+                type: MessageSentType.SNAKE_UPDATED,
                 playerId,
                 snake
               }, ws);
@@ -168,13 +147,13 @@ wss.on('connection', (ws) => {
           }
           break;
 
-        case 'update_food':
+        case MessageReceivedType.UPDATE_FOOD:
           if (currentRoomId) {
             const room = rooms.get(currentRoomId);
             if (room) {
               room.gameState.food = food;
               broadcastToRoom(currentRoomId, {
-                type: 'food_updated',
+                type: MessageSentType.FOOD_UPDATED,
                 food
               });
             }
@@ -194,7 +173,7 @@ wss.on('connection', (ws) => {
         room.gameState.snakes.delete(playerId);
 
         broadcastToRoom(currentRoomId, {
-          type: 'player_left',
+          type: MessageSentType.PLAYER_LEFT,
           playerId
         });
 

@@ -1,7 +1,7 @@
-import { createDOMRenderer } from './rendered';
-import { EASY_SCORE_CONFIG, NORMAL_SCORE_CONFIG, HARD_SCORE_CONFIG, COMBO_SCORE_CONFIG } from './score-config';
-import { GameConfig, Snake, MultiplayerConfig, Vector2D } from 'snake-game-engine';
 import '@demo/styles/css/styles.css';
+import { MultiplayerSnake, Snake, Vector2D } from 'snake-game-engine';
+import { useGameConfig } from './game/game-config';
+import { createDOMRenderer } from './game/rendered';
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="gameBoard" class="game-board"></div>
@@ -25,19 +25,19 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div id="roomInfo"></div>
 `;
 
-let ws: WebSocket;
+// let ws: WebSocket;
 
-function connect() {
-  ws = new WebSocket("http://localhost:8080");
-  console.log("connected", ws);
-  ws.onmessage = (event) => {
-    console.log("event", event.data);
-  };
-}
+// function connect() {
+//   ws = new WebSocket("http://localhost:8080");
+//   console.log("connected", ws);
+//   ws.onmessage = (event) => {
+//     console.log("event", event.data);
+//   };
+// }
 
-function sendMessage() {
-  ws.send("hello");
-}
+// function sendMessage() {
+//   ws.send("hello");
+// }
 
 document.querySelector<HTMLDivElement>('#app')?.classList.add('app');
 
@@ -45,14 +45,11 @@ const gameBoard = document.getElementById('gameBoard') as HTMLDivElement;
 const startButton = document.getElementById('startButton') as HTMLButtonElement;
 const scoreElement = document.getElementById('scoreValue') as HTMLSpanElement;
 const difficultySelect = document.getElementById('difficultySelect') as HTMLSelectElement;
+const createRoomBtn = document.getElementById('createRoomBtn') as HTMLButtonElement;
+const joinRoomBtn = document.getElementById('joinRoomBtn') as HTMLButtonElement;
+const roomIdInput = document.getElementById('roomIdInput') as HTMLInputElement;
 
-const config: GameConfig = {
-  width: 20,
-  height: 20,
-  tickRate: 8,
-  continuousSpace: true,
-  scoreConfig: getScoreConfig(difficultySelect.value)
-};
+const config = useGameConfig(scoreElement, difficultySelect);
 
 const CELL_SIZE = 20;
 gameBoard.style.width = `${config.width * CELL_SIZE}px`;
@@ -84,44 +81,7 @@ function handleKeydown(event: KeyboardEvent) {
   }
 }
 
-function handleScoreUpdate(score: number): void {
-  scoreElement.textContent = score.toString();
-}
-
-function getScoreConfig(difficulty: string) {
-
-  const baseConfig = {
-    onScoreUpdate: handleScoreUpdate
-  };
-
-  switch (difficulty) {
-    case 'easy':
-      return {
-        ...EASY_SCORE_CONFIG,
-        ...baseConfig
-      };
-    case 'normal':
-      return {
-        ...NORMAL_SCORE_CONFIG,
-        ...baseConfig
-      };
-    case 'hard':
-      return {
-        ...HARD_SCORE_CONFIG,
-        ...baseConfig
-      };
-    case 'combo':
-      return {
-        ...COMBO_SCORE_CONFIG,
-        ...baseConfig
-      };
-    default:
-      return {
-        ...NORMAL_SCORE_CONFIG,
-        ...baseConfig
-      };
-  }
-}
+document.addEventListener('keydown', handleKeydown);
 
 startButton.addEventListener('click', () => {
   if (game) {
@@ -131,16 +91,15 @@ startButton.addEventListener('click', () => {
   gameBoard.innerHTML = '';
 
   const renderer = createDOMRenderer(gameBoard, CELL_SIZE);
-  game = new Snake(config, renderer, handleGameOver);
+  game = new MultiplayerSnake(config, renderer, handleGameOver);
   game.start();
   startButton.textContent = 'Restart Game';
 });
 
-document.addEventListener('keydown', handleKeydown);
+createRoomBtn.addEventListener('click', () => {
+  console.log('create room');
+});
 
-
-document.querySelector<HTMLButtonElement>('#counter')!
-  .addEventListener('click', sendMessage)
-
-document.querySelector<HTMLButtonElement>('#connect')!
-  .addEventListener('click', connect)
+joinRoomBtn.addEventListener('click', () => {
+  console.log('join room');
+});
