@@ -1,7 +1,0 @@
-{
-  "extends": "@demo/typescript-config/vite.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  },
-  "include": ["src"]
-}
