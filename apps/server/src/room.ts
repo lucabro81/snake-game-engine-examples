@@ -11,14 +11,12 @@ export class Room {
   ) { }
 
   addPlayer(playerId: string, connection: WebSocket): boolean {
-    // Check if room is full
     if (this.players.size >= ROOM_CONSTANTS.MAX_PLAYERS) {
       return false;
     }
 
     this.players.set(playerId, connection);
 
-    // Update room status if we have minimum players
     if (this.players.size >= ROOM_CONSTANTS.MIN_PLAYERS_TO_START) {
       this.status = RoomStatus.READY;
     }
@@ -29,10 +27,17 @@ export class Room {
   removePlayer(playerId: string) {
     this.players.delete(playerId);
 
-    // Update status if we drop below minimum players
     if (this.players.size < ROOM_CONSTANTS.MIN_PLAYERS_TO_START) {
       this.status = RoomStatus.WAITING;
     }
+  }
+
+  broadcast(message: any, excludePlayerId?: string) {
+    this.players.forEach((connection, playerId) => {
+      if (playerId !== excludePlayerId) {
+        connection.send(JSON.stringify(message));
+      }
+    });
   }
 
   // Helper methods
@@ -46,11 +51,5 @@ export class Room {
 
   getPlayerCount(): number {
     return this.players.size;
-  }
-
-  broadcast(message: any) {
-    this.players.forEach(connection => {
-      connection.send(JSON.stringify(message));
-    });
   }
 }

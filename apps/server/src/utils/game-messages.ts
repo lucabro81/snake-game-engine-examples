@@ -5,6 +5,7 @@ export enum GameMessageType {
   CREATE_ROOM = 'create-room',
   ROOM_CREATED = 'room-created',
   JOIN_ROOM = 'join-room',
+  ROOM_JOINED = 'room-joined',
   PLAYER_JOINED = 'player-joined',
   PLAYER_LEFT = 'player-left',
   ROOM_FULL = 'room-full',
