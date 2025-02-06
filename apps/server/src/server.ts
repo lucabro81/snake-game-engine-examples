@@ -1,10 +1,12 @@
 import { WebSocket, WebSocketServer } from 'ws';
 import { GameMessageType } from './utils/game-messages';
-import { SnakeMessageType } from './utils/snake-messages';
+import { Room } from './room';
+import { v4 as uuidv4 } from 'uuid';
 
 export class GameServer {
   private wss: WebSocketServer;
   private connections: Map<WebSocket, string> = new Map();
+  private rooms: Map<string, Room> = new Map();
 
   constructor(port: number = 8080) {
     this.wss = new WebSocketServer({ port });
