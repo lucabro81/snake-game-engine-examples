@@ -1,11 +1,13 @@
-export class WebSocketService {
+import { GameMessage } from "@/game/utils/game-messages";
+
+export class WebSocketService<T extends string = string, MessageType = GameMessage | T> {
   private ws: WebSocket;
   private isConnected: boolean = false;
 
   // Callback handlers for different message types
-  private messageHandlers: Map<string, (data: any) => void> = new Map();
+  private messageHandlers: Map<MessageType, (data: any) => void> = new Map();
 
-  constructor(private serverUrl: string) {
+  constructor(serverUrl: string) {
     this.ws = new WebSocket(serverUrl);
     this.setupWebSocket();
   }
@@ -40,12 +42,12 @@ export class WebSocketService {
   }
 
   // Register handlers for different message types
-  on(messageType: string, handler: (data: any) => void) {
+  on(messageType: MessageType, handler: (data: any) => void) {
     this.messageHandlers.set(messageType, handler);
   }
 
   // Send a message to the server
-  send(type: string, data: any) {
+  send(type: MessageType, data: any) {
     if (this.isConnected) {
       const message = JSON.stringify({
         type,

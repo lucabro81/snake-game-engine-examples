@@ -1,13 +1,14 @@
 import { Vector2D } from "snake-game-engine";
 
-export enum SnakeMessageType {
-  // Gameplay specific
-  PLAYER_POSITION_UPDATE = 'player-position-update',
-  FOOD_COLLECTED = 'food-collected',
-  PLAYER_DIED = 'player-died'
-}
+export const SnakeMessage = {
+  PLAYER_POSITION_UPDATE: 'player-position-update',
+  FOOD_COLLECTED: 'food-collected',
+  PLAYER_DIED: 'player-died'
+} as const;
 
-// Snake specific message interfaces
+
+export type SnakeMessage = typeof SnakeMessage[keyof typeof SnakeMessage];
+
 export interface PlayerPositionMessage {
   playerId: string;
   positions: Vector2D[];

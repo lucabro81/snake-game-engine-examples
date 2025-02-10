@@ -1,11 +1,10 @@
-import { WebSocketService } from "@/services/websocket.service";
+import { WebSocketService } from '@/services/websocket.service';
 import { Vector2D } from "snake-game-engine";
-import { GameStateMessage, PlayerJoinedMessage, ErrorMessage, GameMessageType, RoomCreatedMessage } from "./utils/game-messages";
-import { PlayerPositionMessage, FoodCollectedMessage, PlayerDiedMessage, SnakeMessageType } from "./utils/snake-message";
-
+import { GameStateMessage, PlayerJoinedMessage, ErrorMessage, RoomCreatedMessage, GameMessage } from "./utils/game-messages";
+import { PlayerPositionMessage, FoodCollectedMessage, PlayerDiedMessage, SnakeMessage } from "./utils/snake-message";
 
 export class SnakeConnectionManager {
-  private wsService: WebSocketService;
+  private wsService: WebSocketService<SnakeMessage>;
   private roomId?: string;
   private playerId?: string;
 
@@ -28,42 +27,42 @@ export class SnakeConnectionManager {
 
   private setupMessageHandlers() {
     // Game management message handlers
-    this.wsService.on(GameMessageType.ROOM_CREATED, (data: RoomCreatedMessage) => {
+    this.wsService.on(GameMessage.ROOM_CREATED, (data: RoomCreatedMessage) => {
       this.roomId = data.roomId;
       this.playerId = data.playerId;
     });
 
-    this.wsService.on(GameMessageType.GAME_STATE, this.callbacks.onGameState);
-    this.wsService.on(GameMessageType.PLAYER_JOINED, this.callbacks.onPlayerJoined);
-    this.wsService.on(GameMessageType.PLAYER_LEFT, this.callbacks.onPlayerLeft);
-    this.wsService.on(GameMessageType.GAME_CAN_START, this.callbacks.onGameCanStart);
-    this.wsService.on(GameMessageType.ERROR, this.callbacks.onError);
+    this.wsService.on(GameMessage.GAME_STATE, this.callbacks.onGameState);
+    this.wsService.on(GameMessage.PLAYER_JOINED, this.callbacks.onPlayerJoined);
+    this.wsService.on(GameMessage.PLAYER_LEFT, this.callbacks.onPlayerLeft);
+    this.wsService.on(GameMessage.GAME_CAN_START, this.callbacks.onGameCanStart);
+    this.wsService.on(GameMessage.ERROR, this.callbacks.onError);
 
     // Snake specific message handlers
-    this.wsService.on(SnakeMessageType.PLAYER_POSITION_UPDATE, this.callbacks.onPlayerPosition);
-    this.wsService.on(SnakeMessageType.FOOD_COLLECTED, this.callbacks.onFoodCollected);
-    this.wsService.on(SnakeMessageType.PLAYER_DIED, this.callbacks.onPlayerDied);
+    this.wsService.on(SnakeMessage.PLAYER_POSITION_UPDATE, this.callbacks.onPlayerPosition);
+    this.wsService.on(SnakeMessage.FOOD_COLLECTED, this.callbacks.onFoodCollected);
+    this.wsService.on(SnakeMessage.PLAYER_DIED, this.callbacks.onPlayerDied);
   }
 
   // Room management methods
   createRoom() {
-    this.wsService.send(GameMessageType.CREATE_ROOM, {});
+    this.wsService.send(GameMessage.CREATE_ROOM, {});
   }
 
   joinRoom(roomId: string) {
-    this.wsService.send(GameMessageType.JOIN_ROOM, { roomId });
+    this.wsService.send(GameMessage.JOIN_ROOM, { roomId });
   }
 
   startGame() {
     if (this.roomId) {
-      this.wsService.send(GameMessageType.START_GAME, { roomId: this.roomId });
+      this.wsService.send(GameMessage.START_GAME, { roomId: this.roomId });
     }
   }
 
   // Gameplay methods
   sendPosition(positions: Vector2D[]) {
     if (this.playerId && this.roomId) {
-      this.wsService.send(SnakeMessageType.PLAYER_POSITION_UPDATE, {
+      this.wsService.send(SnakeMessage.PLAYER_POSITION_UPDATE, {
         playerId: this.playerId,
         positions
       });
@@ -72,7 +71,7 @@ export class SnakeConnectionManager {
 
   notifyFoodCollected(newFoodPosition: Vector2D) {
     if (this.playerId && this.roomId) {
-      this.wsService.send(SnakeMessageType.FOOD_COLLECTED, {
+      this.wsService.send(SnakeMessage.FOOD_COLLECTED, {
         collectedBy: this.playerId,
         newFoodPosition
       });
@@ -81,7 +80,7 @@ export class SnakeConnectionManager {
 
   notifyPlayerDied(finalPositions: Vector2D[]) {
     if (this.playerId && this.roomId) {
-      this.wsService.send(SnakeMessageType.PLAYER_DIED, {
+      this.wsService.send(SnakeMessage.PLAYER_DIED, {
         playerId: this.playerId,
         finalPositions
       });
