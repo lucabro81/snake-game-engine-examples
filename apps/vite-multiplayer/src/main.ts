@@ -1,18 +1,20 @@
-import { createDOMRenderer } from './rendered';
-import { EASY_SCORE_CONFIG, NORMAL_SCORE_CONFIG, HARD_SCORE_CONFIG, COMBO_SCORE_CONFIG } from './score-config';
-import { GameConfig, Snake, Vector2D, MultiplayerSnake } from 'snake-game-engine';
 import '@demo/styles/css/styles.css';
+import { GameConfig, MultiplayerSnake, Vector2D } from 'snake-game-engine';
 import { SnakeConnectionManager } from './game/connection-manager';
+import { GameMessage } from './game/utils/game-messages';
+import { createDOMRenderer } from './rendered';
+import { NORMAL_SCORE_CONFIG } from './score-config';
 
 // Function to extract room code from URL
-function getRoomFromPath(): string | null {
+function getRoomFromPath(): string | undefined {
   const path = window.location.pathname;
   const match = path.match(/^\/room\/([A-Za-z0-9]+)$/);
-  return match ? match[1] : null;
+  return match ? match[1] : undefined;
 }
 
 // Function to set URL to room code
 function setRoomInPath(roomId: string) {
+  console.log('Setting room in path:', roomId);
   const newPath = `/room/${roomId}`;
   window.history.pushState({}, '', newPath);
 }
@@ -30,9 +32,6 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <button id="createRoomBtn">Create Room</button>
         </div>
       ` : ''}
-      <div id="gameControls" style="display: none;">
-        <button id="startButton" disabled>Waiting for players...</button>
-      </div>
     </div>
     <div id="roomInfo" style="display: none;">
       Room Code: <span id="roomCode"></span>
@@ -42,10 +41,8 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 // Get DOM elements
 const gameBoard = document.getElementById('gameBoard') as HTMLDivElement;
-const startButton = document.getElementById('startButton') as HTMLButtonElement;
 const scoreElement = document.getElementById('scoreValue') as HTMLSpanElement;
 const roomControls = document.getElementById('roomControls');
-const gameControls = document.getElementById('gameControls') as HTMLDivElement;
 const roomInfo = document.getElementById('roomInfo') as HTMLDivElement;
 const roomCodeSpan = document.getElementById('roomCode') as HTMLSpanElement;
 const createRoomBtn = document.getElementById('createRoomBtn');
@@ -73,7 +70,6 @@ let connectionManager: SnakeConnectionManager | null = null;
 
 function handleGameOver() {
   alert('Game Over!');
-  startButton.textContent = 'Restart Game';
   if (game) {
     game.stop();
   }
@@ -123,13 +119,14 @@ function initializeConnectionManager() {
     {
       onGameState: (state) => {
         state.players.forEach(player => {
-          game?.addPlayer(player.id, player.snake[0]);
+          game?.addPlayer(player.id, player.snake[0] ?? { x: 0, y: 0 });
         });
         if (state.foodPosition) {
           game?.updateFoodPosition(state.foodPosition);
         }
       },
       onPlayerJoined: (data) => {
+        console.log('Player joined:', data);
         game?.addPlayer(data.playerId, data.position);
       },
       onPlayerLeft: (playerId) => {
@@ -148,8 +145,17 @@ function initializeConnectionManager() {
         alert(`Error: ${error.message}`);
       },
       onGameCanStart: () => {
-        startButton.disabled = false;
-        startButton.textContent = 'Start Game';
+        console.log('Game can start');
+        if (game) {
+          game.start();
+        }
+        // Optional: Show a message that game is starting
+        const statusDiv = document.createElement('div');
+        statusDiv.textContent = 'Game starting...';
+        statusDiv.className = 'game-status';
+        gameBoard.parentElement?.insertBefore(statusDiv, gameBoard);
+        // Remove the message after a short delay
+        setTimeout(() => statusDiv.remove(), 1000);
       }
     }
   );
@@ -160,22 +166,18 @@ function initializeConnectionManager() {
 // Event Handlers
 createRoomBtn?.addEventListener('click', () => {
   const manager = initializeConnectionManager();
-  manager.on('room-created', (data) => {
+
+  manager.on(GameMessage.ROOM_CREATED, (data) => {
     setRoomInPath(data.roomId);
     roomCodeSpan.textContent = data.roomId;
+    setupMultiplayerGame(data.playerId);
   });
-  manager.createRoom();
-  if (roomControls) roomControls.style.display = 'none';
-  gameControls.style.display = 'block';
-  roomInfo.style.display = 'block';
-});
 
-startButton.addEventListener('click', () => {
-  if (game) {
-    game.stop();
-  }
-  game?.start();
-  startButton.textContent = 'Restart Game';
+  setTimeout(() => {
+    manager.createRoom();
+  }, 1000);
+  if (roomControls) roomControls.style.display = 'none';
+  roomInfo.style.display = 'block';
 });
 
 document.addEventListener('keydown', handleKeydown);
@@ -183,8 +185,16 @@ document.addEventListener('keydown', handleKeydown);
 // Auto-join room if code is present in URL
 if (initialRoomCode) {
   const manager = initializeConnectionManager();
-  manager.joinRoom(initialRoomCode);
-  gameControls.style.display = 'block';
+
+  manager.on(GameMessage.ROOM_JOINED, (data) => {
+    console.log('Room joined:', data);
+    roomCodeSpan.textContent = data.roomId;
+    setupMultiplayerGame(data.playerId);
+  });
+
+  setTimeout(() => {
+    manager.joinRoom(initialRoomCode);
+  }, 1000);
   roomInfo.style.display = 'block';
   roomCodeSpan.textContent = initialRoomCode;
 }

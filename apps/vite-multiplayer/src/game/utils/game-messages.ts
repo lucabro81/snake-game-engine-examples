@@ -1,23 +1,10 @@
 import { Vector2D } from "snake-game-engine";
 
-// export enum GameMessageType {
-//   // Room Management
-//   CREATE_ROOM = 'create-room',
-//   ROOM_CREATED = 'room-created',
-//   JOIN_ROOM = 'join-room',
-//   PLAYER_JOINED = 'player-joined',
-//   PLAYER_LEFT = 'player-left',
-//   ROOM_FULL = 'room-full',
-//   GAME_CAN_START = 'game-can-start',
-//   START_GAME = 'start-game',
-//   GAME_STATE = 'game-state',
-//   ERROR = 'error'
-// }
-
 export const GameMessage = {
   CREATE_ROOM: 'create-room',
   ROOM_CREATED: 'room-created',
   JOIN_ROOM: 'join-room',
+  ROOM_JOINED: 'room-joined',
   PLAYER_JOINED: 'player-joined',
   PLAYER_LEFT: 'player-left',
   ROOM_FULL: 'room-full',

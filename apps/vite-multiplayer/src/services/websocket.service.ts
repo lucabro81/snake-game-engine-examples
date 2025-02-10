@@ -1,5 +1,4 @@
-import { GameMessage } from "@/game/utils/game-messages";
-
+import { GameMessage } from "../game/utils/game-messages";
 export class WebSocketService<T extends string = string, MessageType = GameMessage | T> {
   private ws: WebSocket;
   private isConnected: boolean = false;
@@ -13,6 +12,7 @@ export class WebSocketService<T extends string = string, MessageType = GameMessa
   }
 
   private setupWebSocket() {
+    console.log('Setting up WebSocket');
     this.ws.onopen = () => {
       this.isConnected = true;
       console.log('Connected to server');

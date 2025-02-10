@@ -1,8 +1,7 @@
-import { WebSocketService } from '@/services/websocket.service';
 import { Vector2D } from "snake-game-engine";
 import { GameStateMessage, PlayerJoinedMessage, ErrorMessage, RoomCreatedMessage, GameMessage } from "./utils/game-messages";
 import { PlayerPositionMessage, FoodCollectedMessage, PlayerDiedMessage, SnakeMessage } from "./utils/snake-message";
-
+import { WebSocketService } from "../services/websocket.service";
 export class SnakeConnectionManager {
   private wsService: WebSocketService<SnakeMessage>;
   private roomId?: string;
@@ -46,6 +45,7 @@ export class SnakeConnectionManager {
 
   // Room management methods
   createRoom() {
+    console.log('Creating room');
     this.wsService.send(GameMessage.CREATE_ROOM, {});
   }
 
@@ -89,5 +89,9 @@ export class SnakeConnectionManager {
 
   disconnect() {
     this.wsService.disconnect();
+  }
+
+  on(messageType: SnakeMessage | GameMessage, handler: (data: any) => void) {
+    this.wsService.on(messageType, handler);
   }
 }
