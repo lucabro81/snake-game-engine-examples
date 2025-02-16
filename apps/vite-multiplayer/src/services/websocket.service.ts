@@ -1,4 +1,4 @@
-import { GameMessage } from "../game/utils/game-messages";
+import { GameMessage } from "../game/connection/types/game-messages";
 export class WebSocketService<T extends string = string, MessageType = GameMessage | T> {
   private ws: WebSocket;
   private isConnected: boolean = false;
