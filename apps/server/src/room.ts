@@ -2,13 +2,28 @@ import { WebSocket } from 'ws';
 import { ROOM_CONSTANTS } from './utils/game-messages';
 import { RoomStatus } from './utils/room-status';
 
+type MessageHandler = (ws: WebSocket, message: any) => void;
+
 export class Room {
   private players: Map<string, WebSocket> = new Map();
   private status: RoomStatus = RoomStatus.WAITING;
+  private messageHandlers: Set<MessageHandler> = new Set();
 
   constructor(
     private roomId: string,
   ) { }
+
+  addMessageHandler(handler: MessageHandler) {
+    this.messageHandlers.add(handler);
+  }
+
+  removeMessageHandler(handler: MessageHandler) {
+    this.messageHandlers.delete(handler);
+  }
+
+  handleMessage(ws: WebSocket, message: any) {
+    this.messageHandlers.forEach(handler => handler(ws, message));
+  }
 
   addPlayer(playerId: string, connection: WebSocket): boolean {
     if (this.players.size >= ROOM_CONSTANTS.MAX_PLAYERS) {

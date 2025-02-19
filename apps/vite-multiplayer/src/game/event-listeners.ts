@@ -4,7 +4,7 @@ import { MultiplayerSnake } from "snake-game-engine";
 import { GameMessage } from "./connection/types/game-messages";
 import { setupMultiplayerGame, useGame } from "./utils";
 import { getDomElements } from "./configs/dom-settings";
-import { initializeConnectionManager, SnakeConnectionManager } from "./connection/connection-manager";
+import { initializeConnectionManager, setHandlers, SnakeConnectionManager } from "./connection/connection-manager";
 import { setRoomInPath } from "./utils";
 
 function handleKeydown(event: KeyboardEvent) {
@@ -25,18 +25,10 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 function handleCreateRoomClick(config: GameConfig) {
-  const { gameBoard, roomControls, roomInfo, roomCodeSpan } = getDomElements();
+  const { gameBoard, roomControls, roomInfo } = getDomElements();
 
-  const [, setGame] = useGame(null);
-
-  const manager = initializeConnectionManager(gameBoard);
-
-  manager.on(GameMessage.ROOM_CREATED, (data) => {
-    setRoomInPath(data.roomId);
-    roomCodeSpan.textContent = data.roomId;
-    const newGame = setupMultiplayerGame(data.playerId, gameBoard, config, manager);
-    setGame(newGame);
-  });
+  const manager = initializeConnectionManager();
+  setHandlers(manager, gameBoard, config);
 
   setTimeout(() => {
     manager.createRoom();

@@ -24,6 +24,7 @@ export class WebSocketService<T extends string = string, MessageType = GameMessa
     };
 
     this.ws.onmessage = (event) => {
+
       try {
         const message = JSON.parse(event.data);
         const handler = this.messageHandlers.get(message.type);

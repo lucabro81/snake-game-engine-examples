@@ -12,6 +12,8 @@ export enum GameMessageType {
   GAME_CAN_START = 'game-can-start',
   START_GAME = 'start-game',
   GAME_STATE = 'game-state',
+  GAME_STATE_UPDATE = 'game-state-update',
+  REQUEST_GAME_STATE = 'request-game-state',
   ERROR = 'error'
 }
 
