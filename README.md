@@ -5,6 +5,7 @@ A modern implementation of the classic Snake game built with TypeScript and Vite
 - `react`: a react demo app
 - `vue`: a vue demo app
 - `vite`: a vite (vanilla ts) demo app
+- `vite-multiplayer`: a vite (vanilla ts) multiplayer demo app
 
 ## Game Controls
 
