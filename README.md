@@ -2,6 +2,7 @@
 
 A modern implementation of the classic Snake game built with TypeScript and Vite
 
+- `server`: a simple websocket game server
 - `react`: a react demo app
 - `vue`: a vue demo app
 - `vite`: a vite (vanilla ts) demo app
