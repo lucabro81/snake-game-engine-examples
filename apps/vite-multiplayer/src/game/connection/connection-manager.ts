@@ -82,7 +82,6 @@ export class SnakeConnectionManager {
     this.wsService.on(SnakeMessage.FOOD_COLLECTED, this.handlers.onFoodCollected);
     this.wsService.on(SnakeMessage.PLAYER_DIED, this.handlers.onPlayerDied);
 
-    console.log('Registered handlers:', Array.from(this.wsService['messageHandlers'].keys()));
   }
 
   // Room management methods
@@ -156,6 +155,9 @@ export function setHandlers(connectionManager: SnakeConnectionManager, gameBoard
       if (!game) {
         return null;
       }
+
+      console.log('game.getGameState()', game.getGameState());
+
       return game.getGameState();
     },
     onGameState: (state) => {
@@ -229,18 +231,20 @@ export function setHandlers(connectionManager: SnakeConnectionManager, gameBoard
     },
     onRoomCreated: (data) => {
       console.log('onRoomCreated:', data);
-      const { roomCodeSpan } = getDomElements();
+      const { roomCodeSpan, playerId } = getDomElements();
       setRoomInPath(data.roomId);
       roomCodeSpan.textContent = data.roomId;
       const [, setGame] = useGame(null);
+      playerId.textContent = data.playerId;
       const newGame = setupMultiplayerGame(data.playerId, gameBoard, config, connectionManager);
       setGame(newGame);
     },
     onRoomJoined: (data) => {
       console.log('onRoomJoined:', data);
-      const { roomCodeSpan } = getDomElements();
+      const { roomCodeSpan, playerId } = getDomElements();
       roomCodeSpan.textContent = data.roomId;
       const [, setGame] = useGame(null);
+      playerId.textContent = data.playerId;
       const game = setupMultiplayerGame(data.playerId, gameBoard, config, connectionManager);
       setGame(game);
     }

@@ -39,9 +39,17 @@ body {
   border-radius: 2px;
   transition: all 0.1s ease;
 }
+.game-cell.food .player-id {
+  display: none;
+}
 
 .snake-segment {
   background-color: #4caf50;
+}
+
+.snake-segment .player-id {
+  color: rgb(147, 147, 147);
+  font-size: smaller;
 }
 
 .red {

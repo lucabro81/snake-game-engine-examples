@@ -48,6 +48,7 @@ export function setupMultiplayerGame(playerId: string, gameBoard: HTMLElement, c
     renderer,
     {
       onFoodCollected: (data) => {
+        console.log('onFoodCollected', data);
         connectionManager?.notifyFoodCollected(data.newFoodPosition);
       },
       onPlayerPositionUpdate: (playerId, positions) => {

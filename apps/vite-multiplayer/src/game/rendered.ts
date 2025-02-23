@@ -1,5 +1,6 @@
 import { RenderConfig, Vector2D } from 'snake-game-engine';
 
+
 export const createDOMRenderer = (
   container: HTMLElement,
   cellSize: number
@@ -11,6 +12,7 @@ export const createDOMRenderer = (
     cell.style.height = `${cellSize - 1}px`;
     cell.style.left = `${position.x * cellSize}px`;
     cell.style.top = `${position.y * cellSize}px`;
+
     container.appendChild(cell);
     return cell;
   };

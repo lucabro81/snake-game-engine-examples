@@ -4,6 +4,7 @@ import { CELL_SIZE } from "../const";
 
 const dom = (initialRoomCode: string) => document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div class="app">
+    <div>You are: <strong id="playerId">--</strong></div>
     <div id="gameBoard" class="game-board"></div>
     <div class="score">Score: <span id="scoreValue" class="score-value">0</span></div>
     <div class="controls">
@@ -25,7 +26,8 @@ const domeElements = {
   roomControls: document.getElementById('roomControls'),
   roomInfo: document.getElementById('roomInfo') as HTMLDivElement,
   roomCodeSpan: document.getElementById('roomCode') as HTMLSpanElement,
-  createRoomBtn: document.getElementById('createRoomBtn')
+  createRoomBtn: document.getElementById('createRoomBtn'),
+  playerId: document.getElementById('playerId') as HTMLSpanElement
 }
 
 export function getDomElements() {
@@ -36,6 +38,7 @@ export function getDomElements() {
   const roomInfo = domeElements.roomInfo || document.getElementById('roomInfo') as HTMLDivElement;
   const roomCodeSpan = domeElements.roomCodeSpan || document.getElementById('roomCode') as HTMLSpanElement;
   const createRoomBtn = domeElements.createRoomBtn || document.getElementById('createRoomBtn');
+  const playerId = domeElements.playerId || document.getElementById('playerId') as HTMLSpanElement;
 
   domeElements.gameBoard = gameBoard;
   domeElements.scoreElement = scoreElement;
@@ -43,6 +46,7 @@ export function getDomElements() {
   domeElements.roomInfo = roomInfo;
   domeElements.roomCodeSpan = roomCodeSpan;
   domeElements.createRoomBtn = createRoomBtn;
+  domeElements.playerId = playerId;
 
   return {
     gameBoard,
@@ -50,7 +54,8 @@ export function getDomElements() {
     roomControls,
     roomInfo,
     roomCodeSpan,
-    createRoomBtn
+    createRoomBtn,
+    playerId
   }
 }
 
@@ -58,7 +63,7 @@ export const domSettings = (initialRoomCode: string) => {
   console.log('Setting up DOM');
   const app = dom(initialRoomCode);
 
-  const { gameBoard, scoreElement, roomControls, roomInfo, roomCodeSpan, createRoomBtn } = getDomElements();
+  const { gameBoard, scoreElement, roomControls, roomInfo, roomCodeSpan, createRoomBtn, playerId } = getDomElements();
 
   const config: GameConfig = gameConfig(scoreElement);
 
@@ -72,6 +77,7 @@ export const domSettings = (initialRoomCode: string) => {
     roomControls,
     roomInfo,
     roomCodeSpan,
-    createRoomBtn
+    createRoomBtn,
+    playerId
   }
 }

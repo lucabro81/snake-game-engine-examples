@@ -133,8 +133,8 @@ importers:
   apps/vite-multiplayer:
     dependencies:
       snake-game-engine:
-        specifier: link:../../snake-game-engine
-        version: link:../../snake-game-engine
+        specifier: ~1.2.0
+        version: 1.2.0
     devDependencies:
       '@demo/styles':
         specifier: workspace:*
@@ -2012,6 +2012,9 @@ packages:
 
   snake-game-engine@1.1.5:
     resolution: {integrity: sha512-ZSm/1pbP5GCGR4vHLa309Sa+rdPxiqCQ+octX8etb2n6Ghm6MMlldPAA8Ap6urQE3EytgPn89ZbYJl5O1f4Fcw==}
+
+  snake-game-engine@1.2.0:
+    resolution: {integrity: sha512-g70Vo/RYBGbgPLOvvh8pw/rjLFHgBute4VEaCk3W6j6XC7ORU8eSQYEDo80uYOnJDYiFO/rrJp0ei70C1ZbyhQ==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -4420,6 +4423,13 @@ snapshots:
   slash@3.0.0: {}
 
   snake-game-engine@1.1.5: {}
+
+  snake-game-engine@1.2.0:
+    dependencies:
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   source-map-js@1.2.1: {}
 
