@@ -4,6 +4,7 @@ import { Room } from './room';
 import { RoomStatus } from './utils/room-status';
 import { SnakeMessageType } from './utils/snake-messages';
 import { GameStateMessage } from './utils/game-messages';
+import dgram from 'dgram';
 
 export class GameServer {
   private wss: WebSocketServer;
@@ -11,10 +12,48 @@ export class GameServer {
   private rooms: Map<string, Room> = new Map(); // roomId -> Room
   private playerRooms: Map<string, string> = new Map(); // playerId -> roomId
   private gameStates: Map<string, GameStateMessage> = new Map(); // roomId -> GameState
+  private discoveryServer: dgram.Socket | null = null;
+  private port: number = 8080;
 
   constructor(port: number = 8080) {
+    this.port = port;
     this.wss = new WebSocketServer({ port });
     this.setupWebSocketServer();
+  }
+
+  setupDiscoveryServer() {
+    this.discoveryServer = dgram.createSocket('udp4');
+
+    if (!this.discoveryServer) {
+      throw new Error('Failed to create discovery server');
+    }
+
+    this.discoveryServer.on('error', (err: Error) => {
+      console.error(`Discovery server error: ${err.message}`);
+      this.discoveryServer?.close();
+    });
+
+    this.discoveryServer.on('message', (msg: Buffer, rinfo: dgram.RemoteInfo) => {
+      if (msg.toString() === 'DISCOVERY_REQUEST') {
+        console.log(`Discovery request from ${rinfo.address}:${rinfo.port}`);
+        const response = JSON.stringify({
+          type: 'DISCOVERY_RESPONSE',
+          port: this.port
+        });
+
+        this.discoveryServer?.send(response, rinfo.port, rinfo.address);
+      }
+    });
+
+    this.discoveryServer.on('listening', () => {
+      const address = this.discoveryServer?.address();
+      if (!address) {
+        throw new Error('Failed to get discovery server address');
+      }
+      console.log(`Discovery server listening on port ${address.port}`);
+    });
+
+    this.discoveryServer.bind(this.port);
   }
 
   private setupWebSocketServer() {
