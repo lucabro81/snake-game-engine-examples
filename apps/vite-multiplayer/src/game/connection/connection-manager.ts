@@ -140,7 +140,7 @@ export class SnakeConnectionManager {
 
 export function initializeConnectionManager() {
   const connectionManager = new SnakeConnectionManager(
-    'ws://192.168.91.237:8080',
+    'ws://localhost:8080',
   );
 
   return connectionManager;
