@@ -1,5 +1,5 @@
-// import { GameServer } from "./server";
 import { GameServer } from "websocket-game-server";
+// import { GameServer } from "./server";
 import { SnakeMessageType } from "./utils/snake-messages";
 
 const server = new GameServer();

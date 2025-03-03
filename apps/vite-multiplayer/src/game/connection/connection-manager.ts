@@ -199,7 +199,6 @@ export function setHandlers(connectionManager: SnakeConnectionManager, gameBoard
       game?.removePlayer(playerId);
     },
     onPlayerPosition: (data) => {
-      // console.log('Client received position update:', data);
       const [game] = useGame();
       game?.receivePlayerUpdate(data.playerId, data.positions);
     },
